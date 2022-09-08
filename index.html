@@ -33,7 +33,13 @@
             height: 12vh;
             margin-bottom: 1vh;
             font-size: 13vh;
-            text-align: right;
+            
+        }
+        #theinput{
+            text-align: center;
+            width: 100%;
+            height: 1ch;
+            margin: 0;
         }
         #buttons{
             display: flex;
@@ -65,30 +71,78 @@
     <body>
         <div id="container">
             <div id="screen">
-                000000000000
+                <p id="theinput"></p>
             </div>
             <div id="buttons">
-                <div class="button" id="buttonC"><p>C</p></div>
-                <div class="button" id="button()"><p>( )</p></div>
-                <div class="button" id="button%"><p>%</p></div>
-                <div class="button" id="button/"><p>/</p></div>
-                <div class="button" id="button7"><p>7</p></div>
-                <div class="button" id="button8"><p>8</p></div>
-                <div class="button" id="button9"><p>9</p></div>
-                <div class="button" id="buttonx"><p>X</p></div>
-                <div class="button" id="button4"><p>4</p></div>
-                <div class="button" id="button5"><p>5</p></div>
-                <div class="button" id="button6"><p>6</p></div>
-                <div class="button" id="button-"><p>-</p></div>
-                <div class="button" id="button1"><p>1</p></div>
-                <div class="button" id="button2"><p>2</p></div>
-                <div class="button" id="button3"><p>3</p></div>
-                <div class="button" id="button+"><p>+</p></div>
-                <div class="button" id="button+/-"><p>+/-</p></div>
-                <div class="button" id="button0"><p>0</p></div>
-                <div class="button" id="button."><p>.</p></div>
-                <div class="button" id="button="><p>=</p></div>
+                <div class="button" id="buttonC" onclick="clearscreen('')"><p>C</p></div>
+                <div class="button" id="button()" onclick="addparentez()"><p>( )</p></div>
+                <div class="button" id="button%" onclick="addtoscreen('')"><p>%</p></div>
+                <div class="button" id="button/" onclick="addtoscreen('&#247')"><p>&#247</p></div>
+                <div class="button" id="button7" onclick="addtoscreen('7')"><p>7</p></div>
+                <div class="button" id="button8" onclick="addtoscreen('8')"><p>8</p></div>
+                <div class="button" id="button9" onclick="addtoscreen('9')"><p>9</p></div>
+                <div class="button" id="buttonx" onclick="addtoscreen('X')"><p>X</p></div>
+                <div class="button" id="button4" onclick="addtoscreen('4')"><p>4</p></div>
+                <div class="button" id="button5" onclick="addtoscreen('5')"><p>5</p></div>
+                <div class="button" id="button6" onclick="addtoscreen('6')"><p>6</p></div>
+                <div class="button" id="button-" onclick="addtoscreen('-')"><p>-</p></div>
+                <div class="button" id="button1" onclick="addtoscreen('1')"><p>1</p></div>
+                <div class="button" id="button2" onclick="addtoscreen('2')"><p>2</p></div>
+                <div class="button" id="button3" onclick="addtoscreen('3')"><p>3</p></div>
+                <div class="button" id="button+" onclick="addtoscreen('+')"><p>+</p></div>
+                <div class="button" id="button+/-" onclick="addtoscreen('')"><p>+/-</p></div>
+                <div class="button" id="button0" onclick="addtoscreen('0')"><p>0</p></div>
+                <div class="button" id="button." onclick="addtoscreen('.')"><p>.</p></div>
+                <div class="button" id="button=" onclick="calculate('')"><p>=</p></div>
             </div>
         </div>
     </body>
+    <script>
+        screentext = document.getElementById("theinput")
+        
+        function addtoscreen(value){
+            console.log(value)
+            if(screentext.innerHTML == ""){
+                console.log("true")
+                if(value != "+" && value != "-" && value != "X" && value != "÷"){
+                    screentext.innerHTML = screentext.innerHTML + value
+                }
+            }
+            else {
+                screentext.innerHTML = screentext.innerHTML + value
+            }
+        }
+
+        // clear the screen
+        function clearscreen(){
+            screentext.innerHTML = ""
+        }
+
+        function calculate(){
+            
+            result = eval(makeitclean())
+            //console.log(result)
+            screentext.innerHTML = result
+        }
+
+        // replace X by * and ÷ by /
+        function makeitclean(){
+            return screentext.innerHTML.replace(/X/g, "*").replace(/÷/g, "/")
+        }
+
+        //add () depends on how much there is already
+        function addparentez(){
+            number1 = screentext.innerHTML.replace(/[^(]/g, "").length
+            number2 = screentext.innerHTML.replace(/[^)]/g, "").length
+            if (number1 == number2){
+                addtoscreen("(")
+            }
+            else if(number1 > number2){
+                addtoscreen(")")
+            }
+            else if(number1 < number2){
+                addtoscreen("(")
+            }
+        }
+    </script>
 </html>
