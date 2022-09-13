@@ -54,7 +54,19 @@
             padding: 10px;
             text-align: center;
             margin: 0.25%;
-
+        }
+        #buttonC{
+            background-color: red;
+        }
+        #buttonC:hover{
+            background-color: rgb(255, 67, 67);
+        }
+        #c{
+            color: black;
+        }
+        #erase{
+            font-size: 5vh;
+            padding: 2vh;
         }
         .button:hover{
             cursor:pointer;
@@ -74,9 +86,9 @@
                 <p id="theinput"></p>
             </div>
             <div id="buttons">
-                <div class="button" id="buttonC" onclick="clearscreen('')"><p>C</p></div>
+                <div class="button" id="buttonC" onclick="clearscreen('')"><p id="c">C</p></div>
+                <div class="button" id="button%" onclick="undo()"><p id="erase">&#x232B</p></div>
                 <div class="button" id="button()" onclick="addparentez()"><p>( )</p></div>
-                <div class="button" id="button%" onclick="addtoscreen('')"><p>%</p></div>
                 <div class="button" id="button/" onclick="addtoscreen('&#247')"><p>&#247</p></div>
                 <div class="button" id="button7" onclick="addtoscreen('7')"><p>7</p></div>
                 <div class="button" id="button8" onclick="addtoscreen('8')"><p>8</p></div>
@@ -90,7 +102,7 @@
                 <div class="button" id="button2" onclick="addtoscreen('2')"><p>2</p></div>
                 <div class="button" id="button3" onclick="addtoscreen('3')"><p>3</p></div>
                 <div class="button" id="button+" onclick="addtoscreen('+')"><p>+</p></div>
-                <div class="button" id="button+/-" onclick="addtoscreen('')"><p>+/-</p></div>
+                <div class="button" id="button+/-" onclick="addtoscreen('00')"><p>00</p></div>
                 <div class="button" id="button0" onclick="addtoscreen('0')"><p>0</p></div>
                 <div class="button" id="button." onclick="addtoscreen('.')"><p>.</p></div>
                 <div class="button" id="button=" onclick="calculate('')"><p>=</p></div>
@@ -98,12 +110,15 @@
         </div>
     </body>
     <script>
+        // i swear i didnt cheat ;')
+
         screentext = document.getElementById("theinput")
+        var last_num;
         
+        // type the numbers in the screen
         function addtoscreen(value){
-            console.log(value)
+            //console.log(value)
             if(screentext.innerHTML == ""){
-                console.log("true")
                 if(value != "+" && value != "-" && value != "X" && value != "÷"){
                     screentext.innerHTML = screentext.innerHTML + value
                 }
@@ -111,13 +126,25 @@
             else {
                 screentext.innerHTML = screentext.innerHTML + value
             }
+            last_num = value
         }
 
         // clear the screen
         function clearscreen(){
             screentext.innerHTML = ""
+            last_num = ""
         }
 
+        function undo(){
+            if(last_num == "X("){
+                screentext.innerHTML = screentext.innerHTML.slice(0, -2)
+            }
+            else {
+                screentext.innerHTML = screentext.innerHTML.slice(0, -1)
+            }
+        }
+
+        // calculate whats written in the screen (eval)
         function calculate(){
             
             result = eval(makeitclean())
@@ -130,19 +157,48 @@
             return screentext.innerHTML.replace(/X/g, "*").replace(/÷/g, "/")
         }
 
-        //add () depends on how much there is already
+        //add () depends on how much there is already (i used alot of ifs sorry)
         function addparentez(){
             number1 = screentext.innerHTML.replace(/[^(]/g, "").length
             number2 = screentext.innerHTML.replace(/[^)]/g, "").length
-            if (number1 == number2){
-                addtoscreen("(")
+            //console.log(isNaN(last_num))
+            if(isNaN(last_num)){
+                if (last_num == "(" || last_num == "X(" || last_num == ""){
+                    addtoscreen("(")
+                }
+                else if(last_num == ""){
+                    addtoscreen("(")
+                }
+                else if(last_num == ")" && number1 == number2){
+                    addtoscreen("X(")
+                }
+                else if (number1 == number2){
+                    addtoscreen("(")
+                }
+                else if(number1 > number2){
+                    addtoscreen(")")
+                }
+                else if(number1 < number2){
+                    addtoscreen("(")
+                }
             }
-            else if(number1 > number2){
-                addtoscreen(")")
-            }
-            else if(number1 < number2){
-                addtoscreen("(")
+            else {
+                if (number1 == number2){
+                    addtoscreen("X(")
+                }
+                else if(number1 > number2){
+                    addtoscreen(")")
+                }
+                else if(number1 < number2){
+                    addtoscreen("X(")
+                }
             }
         }
+    
+        /*function addminusorplus(){
+            if(!isNaN(screentext.innerHTML)){
+                screentext.innerHTML = screentext.innerHTML.replace(/^/, "-")
+            }
+        }*/
     </script>
 </html>
